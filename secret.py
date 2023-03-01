@@ -1,1 +1,0 @@
-sqlURL = 'postgresql://postgres:453VOgReUyVaX4C6O5nx@containers-us-west-34.railway.app:5767/railway'
