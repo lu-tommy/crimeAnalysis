@@ -4,6 +4,4 @@ using python, seleniumn, and chrome drivers this program scrapes data from Citiz
 
 
 working on:
-- linking database
--automation
--transforming date to numerial
+

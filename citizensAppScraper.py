@@ -37,7 +37,7 @@ def webScrape():
         if 'Yesterday' in i:
             i = i.replace('Yesterday', yesterday)
             datesList.append(i)
-        elif 'Yesterday' not in i:
+        elif i.startswith('Y') ==False:
             today = str(today.strftime('%Y-%m-%d'))
             i = today + " " + i
             datesList.append(i)
@@ -54,7 +54,8 @@ def webScrape():
     conn_string = sqlURL
     db = create_engine(conn_string)
     conn = db.connect()
-    df.to_sql('crimes', con=conn, if_exists='append',index=False)# current issue is database will upload duplicates
+    df.to_sql('crime', con=conn, if_exists='append',index=False)# current issue is database will upload duplicates
+    conn.commit()
     conn.close()
     print('success')
 
