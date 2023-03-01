@@ -17,8 +17,8 @@ def webScrape():
 
     driver = webdriver.Chrome()
     driver.get("https://citizen.com/explore")
-    driver.minimize_window()
-    driver.implicitly_wait(2)
+    #driver.minimize_window()
+    driver.implicitly_wait(10)
     dates = driver.find_elements(By.CLASS_NAME, 'date')
     titles = driver.find_elements(By.CLASS_NAME, 'title')
     neighborhoods = driver.find_elements(By.CLASS_NAME, 'neighborhood')
