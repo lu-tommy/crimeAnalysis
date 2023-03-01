@@ -12,7 +12,8 @@ locationsList = []
 
 driver = webdriver.Chrome('/Users\Tommy\Documents\python\chromedriver')
 driver.get("https://citizen.com/explore")
-driver.implicitly_wait(5)
+driver.minimize_window()
+driver.implicitly_wait(2)
 dates = driver.find_elements(By.CLASS_NAME, 'date')
 titles = driver.find_elements(By.CLASS_NAME, 'title')
 neighborhoods = driver.find_elements(By.CLASS_NAME, 'neighborhood')
@@ -35,6 +36,7 @@ for i in dates:
         today = str(today.strftime('%Y-%m-%d'))
         i = today + " " + i
         datesList.append(i)
+driver.quit()
 
 #dataframe
 d = {'date': datesList, 'title': titlesList,
@@ -45,5 +47,7 @@ df = pd.DataFrame(data=d)
 conn_string = 'postgresql://postgres:453VOgReUyVaX4C6O5nx@containers-us-west-34.railway.app:5767/railway'
 db = create_engine(conn_string)
 conn = db.connect()
-df.to_sql('crimes', con=conn, if_exists='replace',index=True)
+df.to_sql('crimes', con=conn, if_exists='append',index=False)# current issue is database will upload duplicates
 conn.close()
+
+print('success')
