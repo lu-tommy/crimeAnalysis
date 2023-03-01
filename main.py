@@ -37,14 +37,17 @@ def webScrape():
         if 'Yesterday' in i:
             i = i.replace('Yesterday', yesterday)
             datesList.append(i)
-        elif i.startswith('Y') ==False:
+        else:
             today = str(today.strftime('%Y-%m-%d'))
             i = today + " " + i
             datesList.append(i)
-        else:
-            pass
-    driver.quit()
-
+        
+    print (len(datesList))
+    print (len(titlesList))
+    print (len(neighborhoodsList))
+    print (len(locationsList))
+    if (len(datesList))==(len(titlesList))==(len(neighborhoodsList))==(len(locationsList)):
+        print('list length are equal')
     #dataframe
     d = {'date': datesList, 'title': titlesList,
         'location': locationsList, 'neighborhood': neighborhoodsList}
@@ -54,13 +57,13 @@ def webScrape():
     conn_string = sqlURL
     db = create_engine(conn_string)
     conn = db.connect()
-    df.to_sql('crime', con=conn, if_exists='append',index=False)# current issue is database will upload duplicates
+    df.to_sql('crime', con=conn, if_exists='replace',index=False)# current issue is database will upload duplicates
     conn.commit()
     conn.close()
+    driver.quit()
     print('success')
 
-schedule.every(10).minute.do(webScrape)
+schedule.every(.1).minutes.do(webScrape)
 while True:
     schedule.run_pending()
-    time.sleep(1) # wait one minutem
     
