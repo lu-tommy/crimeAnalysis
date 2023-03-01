@@ -59,7 +59,7 @@ def webScrape():
     conn.close()
     print('success')
 
-schedule.every(1).minute.do(webScrape)
+schedule.every(10).minute.do(webScrape)
 while True:
     schedule.run_pending()
     time.sleep(1) # wait one minutem
