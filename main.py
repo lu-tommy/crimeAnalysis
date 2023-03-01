@@ -7,6 +7,11 @@ from sqlalchemy import create_engine
 from secretsKey import sqlURL
 import time
 import schedule
+import psycopg2
+
+from webdriver_manager.chrome import ChromeDriverManager
+
+
 
 
 def webScrape():
@@ -15,7 +20,7 @@ def webScrape():
     neighborhoodsList = []
     locationsList = []
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.get("https://citizen.com/explore")
     #driver.minimize_window()
     driver.implicitly_wait(10)
