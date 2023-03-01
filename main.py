@@ -68,7 +68,7 @@ def webScrape():
     driver.quit()
     print('success')
 
-schedule.every(.1).minutes.do(webScrape)
+schedule.every(1).minutes.do(webScrape)
 while True:
     schedule.run_pending()
     
