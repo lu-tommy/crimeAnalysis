@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine
+from secret import sqlURL
 
 datesList = []
 titlesList = []
@@ -44,7 +45,7 @@ d = {'date': datesList, 'title': titlesList,
 df = pd.DataFrame(data=d)
 
 #connection to postgresql/uploading scraped data
-conn_string = 'postgresql://postgres:453VOgReUyVaX4C6O5nx@containers-us-west-34.railway.app:5767/railway'
+conn_string = sqlURL
 db = create_engine(conn_string)
 conn = db.connect()
 df.to_sql('crimes', con=conn, if_exists='append',index=False)# current issue is database will upload duplicates
