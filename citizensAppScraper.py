@@ -1,38 +1,49 @@
 # Citizens Web Scraper
 import pandas as pd
-from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from datetime import datetime, timedelta
+from sqlalchemy import create_engine
 
-
-driver = webdriver.Chrome('/Users\Tommy\Documents\python\chromedriver')
-driver.get("https://citizen.com/explore")
-driver.implicitly_wait(5)
-
-dates = driver.find_elements(By.CLASS_NAME, 'date')
-titles = driver.find_elements(By.CLASS_NAME, 'title')
-neighborhoods = driver.find_elements(By.CLASS_NAME, 'neighborhood')
-locations = driver.find_elements(By.CLASS_NAME, 'location')
 datesList = []
 titlesList = []
 neighborhoodsList = []
 locationsList = []
+
+driver = webdriver.Chrome('/Users\Tommy\Documents\python\chromedriver')
+driver.get("https://citizen.com/explore")
+driver.implicitly_wait(5)
+dates = driver.find_elements(By.CLASS_NAME, 'date')
+titles = driver.find_elements(By.CLASS_NAME, 'title')
+neighborhoods = driver.find_elements(By.CLASS_NAME, 'neighborhood')
+locations = driver.find_elements(By.CLASS_NAME, 'location')
+
 for i in titles:
     titlesList.append(i.text)
 for i in locations:
     locationsList.append(i.text)
-for i in dates:
-    datesList.append(i.text)
 for i in neighborhoods:
     neighborhoodsList.append(i.text)
+for i in dates:
+    today = datetime.today()
+    yesterday = str((today-timedelta(days=1)).strftime('%Y-%m-%d'))
+    i = i.text
+    if 'Yesterday' in i:
+        i = i.replace('Yesterday', yesterday)
+        datesList.append(i)
+    else:
+        today = str(today.strftime('%Y-%m-%d'))
+        i = today + " " + i
+        datesList.append(i)
 
+#dataframe
+d = {'date': datesList, 'title': titlesList,
+     'location': locationsList, 'neighborhood': neighborhoodsList}
+df = pd.DataFrame(data=d)
 
-x = 0
-while x < len(titlesList):
-    print(titlesList[x])
-    print(neighborhoodsList[x])
-    print(locationsList[x])
-    print(datesList[x])
-    print('')
-    x += 1
+#connection to postgresql/uploading scraped data
+conn_string = 'postgresql://postgres:453VOgReUyVaX4C6O5nx@containers-us-west-34.railway.app:5767/railway'
+db = create_engine(conn_string)
+conn = db.connect()
+df.to_sql('crimes', con=conn, if_exists='replace',index=True)
+conn.close()
