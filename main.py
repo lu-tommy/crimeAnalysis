@@ -62,5 +62,5 @@ def webScrape():
 schedule.every(1).minute.do(webScrape)
 while True:
     schedule.run_pending()
-    time.sleep(1) # wait one minute
+    time.sleep(1) # wait one minutem
     
