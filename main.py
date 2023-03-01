@@ -8,7 +8,7 @@ from secretsKey import sqlURL
 import time
 import schedule
 import psycopg2
-
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -19,8 +19,9 @@ def webScrape():
     titlesList = []
     neighborhoodsList = []
     locationsList = []
-
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
     driver.get("https://citizen.com/explore")
     #driver.minimize_window()
     driver.implicitly_wait(10)
@@ -68,7 +69,7 @@ def webScrape():
     driver.quit()
     print('success')
 
-schedule.every(1).minutes.do(webScrape)
+schedule.every(.1).minutes.do(webScrape)
 while True:
     schedule.run_pending()
     
